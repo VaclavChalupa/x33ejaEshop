@@ -1,0 +1,260 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="orders" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{ordersHome.managed ? 'Edit' : 'Add'} Orders</f:facet>
+
+
+            <s:decorate id="idField" template="layout/edit.xhtml">
+                <ui:define name="label">Id</ui:define>
+                <h:inputText id="id"
+                       required="true"
+                       disabled="#{ordersHome.managed}"
+                          value="#{ordersHome.instance.id}">
+                    <a:support event="onblur" reRender="idField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="createdField" template="layout/edit.xhtml">
+                <ui:define name="label">Created</ui:define>
+                <h:inputText id="created"
+                           size="5"
+                       required="true"
+                          value="#{ordersHome.instance.created}">
+                    <s:convertDateTime type="time"/>
+                    <a:support event="onblur" reRender="createdField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+
+            <s:decorate id="descriptionField" template="layout/edit.xhtml">
+                <ui:define name="label">Description</ui:define>
+                <h:inputTextarea id="description"
+                               cols="80"
+                               rows="3"
+                              value="#{ordersHome.instance.description}"/>
+            </s:decorate>
+
+
+
+
+
+            <s:decorate id="stateField" template="layout/edit.xhtml">
+                <ui:define name="label">State</ui:define>
+                <h:inputText id="state"
+                       required="true"
+                          value="#{ordersHome.instance.state}">
+                    <a:support event="onblur" reRender="stateField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                required fields
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Save"
+                         action="#{ordersHome.persist}"
+                       disabled="#{!ordersHome.wired}"
+                       rendered="#{!ordersHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Save"
+                         action="#{ordersHome.update}"
+                       rendered="#{ordersHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Delete"
+                         action="#{ordersHome.remove}"
+                      immediate="true"
+                       rendered="#{ordersHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="Cancel"
+             propagation="end"
+                    view="/Orders.xhtml"
+                rendered="#{ordersHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Cancel"
+             propagation="end"
+                    view="/#{empty ordersFrom ? 'OrdersList' : ordersFrom}.xhtml"
+                rendered="#{!ordersHome.managed}"/>
+
+        </div>
+    </h:form>
+
+<rich:tabPanel switchType="ajax">
+
+    <rich:tab label="Delivery types *" labelClass="required">
+    <div class="association" id="deliveryTypesParent">
+
+        <h:outputText value="There is no deliveryTypes associated with this orders."
+                   rendered="#{ordersHome.instance.deliveryTypes == null}"/>
+
+        <rich:dataTable var="_deliveryTypes"
+                   value="#{ordersHome.instance.deliveryTypes}"
+                rendered="#{ordersHome.instance.deliveryTypes != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="deliveryTypesTable">
+            <h:column>
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_deliveryTypes.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Description</f:facet>
+                <h:outputText value="#{_deliveryTypes.description}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Name</f:facet>
+                <h:outputText value="#{_deliveryTypes.name}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Price</f:facet>
+                <h:outputText value="#{_deliveryTypes.price}"/>
+            </h:column>
+        </rich:dataTable>
+
+        <div class="actionButtons">
+            <s:button id="#{ordersHome.instance.deliveryTypes != null ? 'changeParent' : 'selectParent'}" value="#{ordersHome.instance.deliveryTypes != null ? 'Change' : 'Select'} deliveryTypes"
+                       view="/DeliveryTypesList.xhtml">
+                <f:param name="from" value="OrdersEdit"/>
+            </s:button>
+        </div>
+
+    </div>
+    </rich:tab>
+
+    <rich:tab label="Order line items">
+        <h:form styleClass="association" id="orderLineItemsChildren">
+
+            <h:outputText value="There are no orderLineItems associated with this orders."
+                       rendered="#{empty ordersHome.orderLineItems}"/>
+
+            <rich:dataTable value="#{ordersHome.orderLineItems}"
+                           var="_orderLineItem"
+                      rendered="#{not empty ordersHome.orderLineItems}"
+                    rowClasses="rvgRowOne,rvgRowTwo"
+                            id="orderLineItemsTable">
+                <rich:column sortBy="#{_orderLineItem.id}">
+                    <f:facet name="header">Id</f:facet>
+                    <h:outputText value="#{_orderLineItem.id}"/>
+                </rich:column>
+                <rich:column sortBy="#{_orderLineItem.count}">
+                    <f:facet name="header">Count</f:facet>
+                    <h:outputText value="#{_orderLineItem.count}"/>
+                </rich:column>
+            </rich:dataTable>
+
+        </h:form>
+
+        <f:subview rendered="#{ordersHome.managed}" id="orderLineItems">
+        <div class="actionButtons">
+            <s:button id="addorderLineItem"
+                   value="Add orderLineItem"
+                    view="/OrderLineItemEdit.xhtml"
+             propagation="none">
+                 <f:param name="ordersId"
+                         value="#{ordersHome.instance.id}"/>
+                 <f:param name="orderLineItemFrom" value="Orders"/>
+            </s:button>
+        </div>
+        </f:subview>
+    </rich:tab>
+
+    <rich:tab label="Payment types *" labelClass="required">
+    <div class="association" id="paymentTypesParent">
+
+        <h:outputText value="There is no paymentTypes associated with this orders."
+                   rendered="#{ordersHome.instance.paymentTypes == null}"/>
+
+        <rich:dataTable var="_paymentTypes"
+                   value="#{ordersHome.instance.paymentTypes}"
+                rendered="#{ordersHome.instance.paymentTypes != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="paymentTypesTable">
+            <h:column>
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_paymentTypes.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Description</f:facet>
+                <h:outputText value="#{_paymentTypes.description}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Name</f:facet>
+                <h:outputText value="#{_paymentTypes.name}"/>
+            </h:column>
+        </rich:dataTable>
+
+        <div class="actionButtons">
+            <s:button id="#{ordersHome.instance.paymentTypes != null ? 'changeParent' : 'selectParent'}" value="#{ordersHome.instance.paymentTypes != null ? 'Change' : 'Select'} paymentTypes"
+                       view="/PaymentTypesList.xhtml">
+                <f:param name="from" value="OrdersEdit"/>
+            </s:button>
+        </div>
+
+    </div>
+    </rich:tab>
+
+    <rich:tab label="Registered user *" labelClass="required">
+    <div class="association" id="registeredUserParent">
+
+        <h:outputText value="There is no registeredUser associated with this orders."
+                   rendered="#{ordersHome.instance.registeredUser == null}"/>
+
+        <rich:dataTable var="_registeredUser"
+                   value="#{ordersHome.instance.registeredUser}"
+                rendered="#{ordersHome.instance.registeredUser != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="registeredUserTable">
+            <h:column>
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_registeredUser.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Addresses by billing address id</f:facet>
+                <h:outputText value="#{_registeredUser.addressesByBillingAddress.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Addresses by delivery address id</f:facet>
+                <h:outputText value="#{_registeredUser.addressesByDeliveryAddress.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Users id</f:facet>
+                <h:outputText value="#{_registeredUser.users.id}"/>
+            </h:column>
+        </rich:dataTable>
+
+        <div class="actionButtons">
+            <s:button id="#{ordersHome.instance.registeredUser != null ? 'changeParent' : 'selectParent'}" value="#{ordersHome.instance.registeredUser != null ? 'Change' : 'Select'} registeredUser"
+                       view="/RegisteredUserList.xhtml">
+                <f:param name="from" value="OrdersEdit"/>
+            </s:button>
+        </div>
+
+    </div>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

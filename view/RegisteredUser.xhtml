@@ -1,0 +1,323 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <rich:panel>
+        <f:facet name="header">Registered user Details</f:facet>
+
+
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+
+        <s:button view="/RegisteredUserEdit.xhtml"
+                    id="edit"
+                 value="Edit"/>
+
+        <s:button view="/#{empty registeredUserFrom ? 'RegisteredUserList' : registeredUserFrom}.xhtml"
+                    id="done"
+                 value="Done"/>
+
+    </div>
+
+    <rich:tabPanel switchType="ajax">
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/manytoone.gif" style="vertical-align: middle; padding-right: 4px;"/>Addresses by billing address</h:panelGroup>
+        </f:facet>
+    <div class="association" id="addressesByBillingAddressParent">
+
+        <h:outputText value="There is no addressesByBillingAddress associated with this registeredUser."
+                   rendered="#{registeredUserHome.instance.addressesByBillingAddress == null}"/>
+
+        <rich:dataTable var="_addresses"
+                   value="#{registeredUserHome.instance.addressesByBillingAddress}"
+                rendered="#{registeredUserHome.instance.addressesByBillingAddress != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="addressesByBillingAddressTable">
+            <h:column>
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_addresses.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">City</f:facet>
+                <h:outputText value="#{_addresses.city}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Country</f:facet>
+                <h:outputText value="#{_addresses.country}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">House number</f:facet>
+                <h:outputText value="#{_addresses.houseNumber}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Post code</f:facet>
+                <h:outputText value="#{_addresses.postCode}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Street</f:facet>
+                <h:outputText value="#{_addresses.street}"/>
+            </h:column>
+            <h:column styleClass="action">
+                <f:facet name="header">Action</f:facet>
+                <s:link id="viewaddresses"
+                     value="View"
+                      view="/Addresses.xhtml">
+                    <f:param name="addressesId"
+                           value="#{_addresses.id}"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </div>
+    </rich:tab>
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/manytoone.gif" style="vertical-align: middle; padding-right: 4px;"/>Addresses by delivery address</h:panelGroup>
+        </f:facet>
+    <div class="association" id="addressesByDeliveryAddressParent">
+
+        <h:outputText value="There is no addressesByDeliveryAddress associated with this registeredUser."
+                   rendered="#{registeredUserHome.instance.addressesByDeliveryAddress == null}"/>
+
+        <rich:dataTable var="_addresses"
+                   value="#{registeredUserHome.instance.addressesByDeliveryAddress}"
+                rendered="#{registeredUserHome.instance.addressesByDeliveryAddress != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="addressesByDeliveryAddressTable">
+            <h:column>
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_addresses.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">City</f:facet>
+                <h:outputText value="#{_addresses.city}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Country</f:facet>
+                <h:outputText value="#{_addresses.country}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">House number</f:facet>
+                <h:outputText value="#{_addresses.houseNumber}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Post code</f:facet>
+                <h:outputText value="#{_addresses.postCode}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Street</f:facet>
+                <h:outputText value="#{_addresses.street}"/>
+            </h:column>
+            <h:column styleClass="action">
+                <f:facet name="header">Action</f:facet>
+                <s:link id="viewaddresses"
+                     value="View"
+                      view="/Addresses.xhtml">
+                    <f:param name="addressesId"
+                           value="#{_addresses.id}"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </div>
+    </rich:tab>
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>Orderses</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="ordersesChildren">
+
+        <h:outputText value="There are no orderses associated with this registeredUser."
+                   rendered="#{empty registeredUserHome.orderses}"/>
+
+        <rich:dataTable value="#{registeredUserHome.orderses}"
+                       var="_orders"
+                  rendered="#{not empty registeredUserHome.orderses}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="ordersesTable">
+            <rich:column sortBy="#{_orders.id}">
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_orders.id}"/>
+            </rich:column>
+            <rich:column sortBy="#{_orders.created}">
+                <f:facet name="header">Created</f:facet>
+                <h:outputText value="#{_orders.created}">
+                    <s:convertDateTime type="time"/>
+                </h:outputText>
+            </rich:column>
+            <rich:column sortBy="#{_orders.description}">
+                <f:facet name="header">Description</f:facet>
+                <h:outputText value="#{_orders.description}"/>
+            </rich:column>
+            <rich:column sortBy="#{_orders.state}">
+                <f:facet name="header">State</f:facet>
+                <h:outputText value="#{_orders.state}"/>
+            </rich:column>
+            <h:column>
+                <f:facet name="header">Action</f:facet>
+                <s:link id="selectorders"
+                     value="Select"
+                      view="/Orders.xhtml">
+                    <f:param name="ordersId"
+                            value="#{_orders.id}"/>
+                    <f:param name="ordersFrom" value="RegisteredUser"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </h:form>
+
+    <div class="actionButtons">
+        <s:button
+               value="Add orders"
+                view="/OrdersEdit.xhtml">
+            <f:param name="registeredUserId"
+                    value="#{registeredUserHome.instance.id}"/>
+            <f:param name="ordersFrom" value="RegisteredUser"/>
+        </s:button>
+    </div>
+    </rich:tab>
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>Registered user products</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="registeredUserProductsChildren">
+
+        <h:outputText value="There are no registeredUserProducts associated with this registeredUser."
+                   rendered="#{empty registeredUserHome.registeredUserProducts}"/>
+
+        <rich:dataTable value="#{registeredUserHome.registeredUserProducts}"
+                       var="_registeredUserProduct"
+                  rendered="#{not empty registeredUserHome.registeredUserProducts}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="registeredUserProductsTable">
+            <rich:column sortBy="#{_registeredUserProduct.id.product}">
+                <f:facet name="header">Product</f:facet>
+                <h:outputText value="#{_registeredUserProduct.id.product}"/>
+            </rich:column>
+            <rich:column sortBy="#{_registeredUserProduct.id.registeredUser}">
+                <f:facet name="header">Registered user</f:facet>
+                <h:outputText value="#{_registeredUserProduct.id.registeredUser}"/>
+            </rich:column>
+            <h:column>
+                <f:facet name="header">Action</f:facet>
+                <s:link id="selectregisteredUserProduct"
+                     value="Select"
+                      view="/RegisteredUserProduct.xhtml">
+                    <f:param name="registeredUserProductProduct"
+                            value="#{_registeredUserProduct.id.product}"/>
+                    <f:param name="registeredUserProductRegisteredUser"
+                            value="#{_registeredUserProduct.id.registeredUser}"/>
+                    <f:param name="registeredUserProductFrom" value="RegisteredUser"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </h:form>
+
+    <div class="actionButtons">
+        <s:button
+               value="Add registeredUserProduct"
+                view="/RegisteredUserProductEdit.xhtml">
+            <f:param name="registeredUserId"
+                    value="#{registeredUserHome.instance.id}"/>
+            <f:param name="registeredUserProductFrom" value="RegisteredUser"/>
+        </s:button>
+    </div>
+    </rich:tab>
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/manytoone.gif" style="vertical-align: middle; padding-right: 4px;"/>Users</h:panelGroup>
+        </f:facet>
+    <div class="association" id="usersParent">
+
+        <h:outputText value="There is no users associated with this registeredUser."
+                   rendered="#{registeredUserHome.instance.users == null}"/>
+
+        <rich:dataTable var="_users"
+                   value="#{registeredUserHome.instance.users}"
+                rendered="#{registeredUserHome.instance.users != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="usersTable">
+            <h:column>
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_users.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Email</f:facet>
+                <h:outputText value="#{_users.email}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Firstname</f:facet>
+                <h:outputText value="#{_users.firstname}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Inserted</f:facet>
+                <h:outputText value="#{_users.inserted}">
+                    <s:convertDateTime type="both" dateStyle="short"/>
+                </h:outputText>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Last logged</f:facet>
+                <h:outputText value="#{_users.lastLogged}">
+                    <s:convertDateTime type="time"/>
+                </h:outputText>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Password</f:facet>
+                <h:outputText value="#{_users.password}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Surname</f:facet>
+                <h:outputText value="#{_users.surname}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Type</f:facet>
+                <h:outputText value="#{_users.type}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Username</f:facet>
+                <h:outputText value="#{_users.username}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Administrators id</f:facet>
+                <h:outputText value="#{_users.administrators.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Registered user id</f:facet>
+                <h:outputText value="#{_users.registeredUser.id}"/>
+            </h:column>
+            <h:column styleClass="action">
+                <f:facet name="header">Action</f:facet>
+                <s:link id="viewusers"
+                     value="View"
+                      view="/Users.xhtml">
+                    <f:param name="usersId"
+                           value="#{_users.id}"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </div>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

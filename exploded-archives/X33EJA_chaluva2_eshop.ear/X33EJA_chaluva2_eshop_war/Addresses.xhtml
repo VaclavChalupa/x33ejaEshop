@@ -1,0 +1,152 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <rich:panel>
+        <f:facet name="header">Addresses Details</f:facet>
+
+        <s:decorate id="id" template="layout/display.xhtml">
+            <ui:define name="label">Id</ui:define>
+            <h:outputText value="#{addressesHome.instance.id}"/>
+        </s:decorate>
+
+        <s:decorate id="city" template="layout/display.xhtml">
+            <ui:define name="label">City</ui:define>
+            <h:outputText value="#{addressesHome.instance.city}"/>
+        </s:decorate>
+
+        <s:decorate id="country" template="layout/display.xhtml">
+            <ui:define name="label">Country</ui:define>
+            <h:outputText value="#{addressesHome.instance.country}"/>
+        </s:decorate>
+
+        <s:decorate id="houseNumber" template="layout/display.xhtml">
+            <ui:define name="label">House number</ui:define>
+            <h:outputText value="#{addressesHome.instance.houseNumber}"/>
+        </s:decorate>
+
+        <s:decorate id="postCode" template="layout/display.xhtml">
+            <ui:define name="label">Post code</ui:define>
+            <h:outputText value="#{addressesHome.instance.postCode}"/>
+        </s:decorate>
+
+        <s:decorate id="street" template="layout/display.xhtml">
+            <ui:define name="label">Street</ui:define>
+            <h:outputText value="#{addressesHome.instance.street}"/>
+        </s:decorate>
+
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+
+        <s:button view="/AddressesEdit.xhtml"
+                    id="edit"
+                 value="Edit"/>
+
+        <s:button view="/#{empty addressesFrom ? 'AddressesList' : addressesFrom}.xhtml"
+                    id="done"
+                 value="Done"/>
+
+    </div>
+
+    <rich:tabPanel switchType="ajax">
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>Registered users for billing address</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="registeredUsersForBillingAddressChildren">
+
+        <h:outputText value="There are no registeredUsersForBillingAddress associated with this addresses."
+                   rendered="#{empty addressesHome.registeredUsersForBillingAddress}"/>
+
+        <rich:dataTable value="#{addressesHome.registeredUsersForBillingAddress}"
+                       var="_registeredUser"
+                  rendered="#{not empty addressesHome.registeredUsersForBillingAddress}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="registeredUsersForBillingAddressTable">
+            <rich:column sortBy="#{_registeredUser.id}">
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_registeredUser.id}"/>
+            </rich:column>
+            <h:column>
+                <f:facet name="header">Action</f:facet>
+                <s:link id="selectregisteredUser"
+                     value="Select"
+                      view="/RegisteredUser.xhtml">
+                    <f:param name="registeredUserId"
+                            value="#{_registeredUser.id}"/>
+                    <f:param name="registeredUserFrom" value="Addresses"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </h:form>
+
+    <div class="actionButtons">
+        <s:button
+               value="Add registeredUser"
+                view="/RegisteredUserEdit.xhtml">
+            <f:param name="addressesId"
+                    value="#{addressesHome.instance.id}"/>
+            <f:param name="registeredUserFrom" value="Addresses"/>
+        </s:button>
+    </div>
+    </rich:tab>
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>Registered users for delivery address</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="registeredUsersForDeliveryAddressChildren">
+
+        <h:outputText value="There are no registeredUsersForDeliveryAddress associated with this addresses."
+                   rendered="#{empty addressesHome.registeredUsersForDeliveryAddress}"/>
+
+        <rich:dataTable value="#{addressesHome.registeredUsersForDeliveryAddress}"
+                       var="_registeredUser"
+                  rendered="#{not empty addressesHome.registeredUsersForDeliveryAddress}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="registeredUsersForDeliveryAddressTable">
+            <rich:column sortBy="#{_registeredUser.id}">
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_registeredUser.id}"/>
+            </rich:column>
+            <h:column>
+                <f:facet name="header">Action</f:facet>
+                <s:link id="selectregisteredUser"
+                     value="Select"
+                      view="/RegisteredUser.xhtml">
+                    <f:param name="registeredUserId"
+                            value="#{_registeredUser.id}"/>
+                    <f:param name="registeredUserFrom" value="Addresses"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </h:form>
+
+    <div class="actionButtons">
+        <s:button
+               value="Add registeredUser"
+                view="/RegisteredUserEdit.xhtml">
+            <f:param name="addressesId"
+                    value="#{addressesHome.instance.id}"/>
+            <f:param name="registeredUserFrom" value="Addresses"/>
+        </s:button>
+    </div>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

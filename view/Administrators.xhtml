@@ -1,0 +1,297 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <rich:panel>
+        <f:facet name="header">Administrators Details</f:facet>
+
+
+        <s:decorate id="archived" template="layout/display.xhtml">
+            <ui:define name="label">Archived</ui:define>
+            <h:outputText value="#{administratorsHome.instance.archived}"/>
+        </s:decorate>
+
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+
+        <s:button view="/AdministratorsEdit.xhtml"
+                    id="edit"
+                 value="Edit"/>
+
+        <s:button view="/#{empty administratorsFrom ? 'AdministratorsList' : administratorsFrom}.xhtml"
+                    id="done"
+                 value="Done"/>
+
+    </div>
+
+    <rich:tabPanel switchType="ajax">
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>Administrator roles</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="administratorRolesChildren">
+
+        <h:outputText value="There are no administratorRoles associated with this administrators."
+                   rendered="#{empty administratorsHome.administratorRoles}"/>
+
+        <rich:dataTable value="#{administratorsHome.administratorRoles}"
+                       var="_administratorRole"
+                  rendered="#{not empty administratorsHome.administratorRoles}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="administratorRolesTable">
+            <rich:column sortBy="#{_administratorRole.id.administrator}">
+                <f:facet name="header">Administrator</f:facet>
+                <h:outputText value="#{_administratorRole.id.administrator}"/>
+            </rich:column>
+            <rich:column sortBy="#{_administratorRole.id.role}">
+                <f:facet name="header">Role</f:facet>
+                <h:outputText value="#{_administratorRole.id.role}"/>
+            </rich:column>
+            <h:column>
+                <f:facet name="header">Action</f:facet>
+                <s:link id="selectadministratorRole"
+                     value="Select"
+                      view="/AdministratorRole.xhtml">
+                    <f:param name="administratorRoleAdministrator"
+                            value="#{_administratorRole.id.administrator}"/>
+                    <f:param name="administratorRoleRole"
+                            value="#{_administratorRole.id.role}"/>
+                    <f:param name="administratorRoleFrom" value="Administrators"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </h:form>
+
+    <div class="actionButtons">
+        <s:button
+               value="Add administratorRole"
+                view="/AdministratorRoleEdit.xhtml">
+            <f:param name="administratorsId"
+                    value="#{administratorsHome.instance.id}"/>
+            <f:param name="administratorRoleFrom" value="Administrators"/>
+        </s:button>
+    </div>
+    </rich:tab>
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>Photoses</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="photosesChildren">
+
+        <h:outputText value="There are no photoses associated with this administrators."
+                   rendered="#{empty administratorsHome.photoses}"/>
+
+        <rich:dataTable value="#{administratorsHome.photoses}"
+                       var="_photos"
+                  rendered="#{not empty administratorsHome.photoses}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="photosesTable">
+            <rich:column sortBy="#{_photos.id}">
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_photos.id}"/>
+            </rich:column>
+            <rich:column sortBy="#{_photos.created}">
+                <f:facet name="header">Created</f:facet>
+                <h:outputText value="#{_photos.created}">
+                    <s:convertDateTime type="time"/>
+                </h:outputText>
+            </rich:column>
+            <rich:column sortBy="#{_photos.name}">
+                <f:facet name="header">Name</f:facet>
+                <h:outputText value="#{_photos.name}"/>
+            </rich:column>
+            <rich:column sortBy="#{_photos.order}">
+                <f:facet name="header">Order</f:facet>
+                <h:outputText value="#{_photos.order}"/>
+            </rich:column>
+            <h:column>
+                <f:facet name="header">Action</f:facet>
+                <s:link id="selectphotos"
+                     value="Select"
+                      view="/Photos.xhtml">
+                    <f:param name="photosId"
+                            value="#{_photos.id}"/>
+                    <f:param name="photosFrom" value="Administrators"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </h:form>
+
+    <div class="actionButtons">
+        <s:button
+               value="Add photos"
+                view="/PhotosEdit.xhtml">
+            <f:param name="administratorsId"
+                    value="#{administratorsHome.instance.id}"/>
+            <f:param name="photosFrom" value="Administrators"/>
+        </s:button>
+    </div>
+    </rich:tab>
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>Products</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="productsChildren">
+
+        <h:outputText value="There are no products associated with this administrators."
+                   rendered="#{empty administratorsHome.products}"/>
+
+        <rich:dataTable value="#{administratorsHome.products}"
+                       var="_product"
+                  rendered="#{not empty administratorsHome.products}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="productsTable">
+            <rich:column sortBy="#{_product.id}">
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_product.id}"/>
+            </rich:column>
+            <rich:column sortBy="#{_product.actionPrice}">
+                <f:facet name="header">Action price</f:facet>
+                <h:outputText value="#{_product.actionPrice}"/>
+            </rich:column>
+            <rich:column sortBy="#{_product.created}">
+                <f:facet name="header">Created</f:facet>
+                <h:outputText value="#{_product.created}">
+                    <s:convertDateTime type="time"/>
+                </h:outputText>
+            </rich:column>
+            <rich:column sortBy="#{_product.description}">
+                <f:facet name="header">Description</f:facet>
+                <h:outputText value="#{_product.description}"/>
+            </rich:column>
+            <rich:column sortBy="#{_product.inAction}">
+                <f:facet name="header">In action</f:facet>
+                <h:outputText value="#{_product.inAction}"/>
+            </rich:column>
+            <rich:column sortBy="#{_product.name}">
+                <f:facet name="header">Name</f:facet>
+                <h:outputText value="#{_product.name}"/>
+            </rich:column>
+            <rich:column sortBy="#{_product.price}">
+                <f:facet name="header">Price</f:facet>
+                <h:outputText value="#{_product.price}"/>
+            </rich:column>
+            <rich:column sortBy="#{_product.state}">
+                <f:facet name="header">State</f:facet>
+                <h:outputText value="#{_product.state}"/>
+            </rich:column>
+            <h:column>
+                <f:facet name="header">Action</f:facet>
+                <s:link id="selectproduct"
+                     value="Select"
+                      view="/Product.xhtml">
+                    <f:param name="productId"
+                            value="#{_product.id}"/>
+                    <f:param name="productFrom" value="Administrators"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </h:form>
+
+    <div class="actionButtons">
+        <s:button
+               value="Add product"
+                view="/ProductEdit.xhtml">
+            <f:param name="administratorsId"
+                    value="#{administratorsHome.instance.id}"/>
+            <f:param name="productFrom" value="Administrators"/>
+        </s:button>
+    </div>
+    </rich:tab>
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/manytoone.gif" style="vertical-align: middle; padding-right: 4px;"/>Users</h:panelGroup>
+        </f:facet>
+    <div class="association" id="usersParent">
+
+        <h:outputText value="There is no users associated with this administrators."
+                   rendered="#{administratorsHome.instance.users == null}"/>
+
+        <rich:dataTable var="_users"
+                   value="#{administratorsHome.instance.users}"
+                rendered="#{administratorsHome.instance.users != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="usersTable">
+            <h:column>
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_users.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Email</f:facet>
+                <h:outputText value="#{_users.email}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Firstname</f:facet>
+                <h:outputText value="#{_users.firstname}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Inserted</f:facet>
+                <h:outputText value="#{_users.inserted}">
+                    <s:convertDateTime type="both" dateStyle="short"/>
+                </h:outputText>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Last logged</f:facet>
+                <h:outputText value="#{_users.lastLogged}">
+                    <s:convertDateTime type="time"/>
+                </h:outputText>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Password</f:facet>
+                <h:outputText value="#{_users.password}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Surname</f:facet>
+                <h:outputText value="#{_users.surname}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Type</f:facet>
+                <h:outputText value="#{_users.type}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Username</f:facet>
+                <h:outputText value="#{_users.username}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Administrators id</f:facet>
+                <h:outputText value="#{_users.administrators.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Registered user id</f:facet>
+                <h:outputText value="#{_users.registeredUser.id}"/>
+            </h:column>
+            <h:column styleClass="action">
+                <f:facet name="header">Action</f:facet>
+                <s:link id="viewusers"
+                     value="View"
+                      view="/Users.xhtml">
+                    <f:param name="usersId"
+                           value="#{_users.id}"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </div>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

@@ -1,0 +1,108 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="deliveryTypes" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{deliveryTypesHome.managed ? 'Edit' : 'Add'} Delivery types</f:facet>
+
+
+            <s:decorate id="idField" template="layout/edit.xhtml">
+                <ui:define name="label">Id</ui:define>
+                <h:inputText id="id"
+                       required="true"
+                       disabled="#{deliveryTypesHome.managed}"
+                          value="#{deliveryTypesHome.instance.id}">
+                    <a:support event="onblur" reRender="idField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="descriptionField" template="layout/edit.xhtml">
+                <ui:define name="label">Description</ui:define>
+                <h:inputTextarea id="description"
+                               cols="80"
+                               rows="3"
+                              value="#{deliveryTypesHome.instance.description}"/>
+            </s:decorate>
+
+
+            <s:decorate id="nameField" template="layout/edit.xhtml">
+                <ui:define name="label">Name</ui:define>
+                <h:inputText id="name"
+                       required="true"
+                           size="100"
+                      maxlength="100"
+                          value="#{deliveryTypesHome.instance.name}">
+                    <a:support event="onblur" reRender="nameField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+
+            <s:decorate id="priceField" template="layout/edit.xhtml">
+                <ui:define name="label">Price</ui:define>
+                <h:inputText id="price"
+                       required="true"
+                          value="#{deliveryTypesHome.instance.price}">
+                    <a:support event="onblur" reRender="priceField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                required fields
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Save"
+                         action="#{deliveryTypesHome.persist}"
+                       disabled="#{!deliveryTypesHome.wired}"
+                       rendered="#{!deliveryTypesHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Save"
+                         action="#{deliveryTypesHome.update}"
+                       rendered="#{deliveryTypesHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Delete"
+                         action="#{deliveryTypesHome.remove}"
+                      immediate="true"
+                       rendered="#{deliveryTypesHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="Cancel"
+             propagation="end"
+                    view="/DeliveryTypes.xhtml"
+                rendered="#{deliveryTypesHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Cancel"
+             propagation="end"
+                    view="/#{empty deliveryTypesFrom ? 'DeliveryTypesList' : deliveryTypesFrom}.xhtml"
+                rendered="#{!deliveryTypesHome.managed}"/>
+
+        </div>
+    </h:form>
+
+<!-- 
+
+ -->
+</ui:define>
+
+</ui:composition>

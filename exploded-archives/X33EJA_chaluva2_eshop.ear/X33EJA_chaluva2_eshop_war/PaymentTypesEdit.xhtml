@@ -1,0 +1,144 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="paymentTypes" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{paymentTypesHome.managed ? 'Edit' : 'Add'} Payment types</f:facet>
+
+
+            <s:decorate id="idField" template="layout/edit.xhtml">
+                <ui:define name="label">Id</ui:define>
+                <h:inputText id="id"
+                       required="true"
+                       disabled="#{paymentTypesHome.managed}"
+                          value="#{paymentTypesHome.instance.id}">
+                    <a:support event="onblur" reRender="idField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="descriptionField" template="layout/edit.xhtml">
+                <ui:define name="label">Description</ui:define>
+                <h:inputTextarea id="description"
+                               cols="80"
+                               rows="3"
+                              value="#{paymentTypesHome.instance.description}"/>
+            </s:decorate>
+
+
+            <s:decorate id="nameField" template="layout/edit.xhtml">
+                <ui:define name="label">Name</ui:define>
+                <h:inputText id="name"
+                       required="true"
+                           size="100"
+                      maxlength="100"
+                          value="#{paymentTypesHome.instance.name}">
+                    <a:support event="onblur" reRender="nameField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                required fields
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Save"
+                         action="#{paymentTypesHome.persist}"
+                       disabled="#{!paymentTypesHome.wired}"
+                       rendered="#{!paymentTypesHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Save"
+                         action="#{paymentTypesHome.update}"
+                       rendered="#{paymentTypesHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Delete"
+                         action="#{paymentTypesHome.remove}"
+                      immediate="true"
+                       rendered="#{paymentTypesHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="Cancel"
+             propagation="end"
+                    view="/PaymentTypes.xhtml"
+                rendered="#{paymentTypesHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Cancel"
+             propagation="end"
+                    view="/#{empty paymentTypesFrom ? 'PaymentTypesList' : paymentTypesFrom}.xhtml"
+                rendered="#{!paymentTypesHome.managed}"/>
+
+        </div>
+    </h:form>
+
+<rich:tabPanel switchType="ajax">
+
+    <rich:tab label="Orderses">
+        <h:form styleClass="association" id="ordersesChildren">
+
+            <h:outputText value="There are no orderses associated with this paymentTypes."
+                       rendered="#{empty paymentTypesHome.orderses}"/>
+
+            <rich:dataTable value="#{paymentTypesHome.orderses}"
+                           var="_orders"
+                      rendered="#{not empty paymentTypesHome.orderses}"
+                    rowClasses="rvgRowOne,rvgRowTwo"
+                            id="ordersesTable">
+                <rich:column sortBy="#{_orders.id}">
+                    <f:facet name="header">Id</f:facet>
+                    <h:outputText value="#{_orders.id}"/>
+                </rich:column>
+                <rich:column sortBy="#{_orders.created}">
+                    <f:facet name="header">Created</f:facet>
+                    <h:outputText value="#{_orders.created}">
+                        <s:convertDateTime type="time"/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_orders.description}">
+                    <f:facet name="header">Description</f:facet>
+                    <h:outputText value="#{_orders.description}"/>
+                </rich:column>
+                <rich:column sortBy="#{_orders.state}">
+                    <f:facet name="header">State</f:facet>
+                    <h:outputText value="#{_orders.state}"/>
+                </rich:column>
+            </rich:dataTable>
+
+        </h:form>
+
+        <f:subview rendered="#{paymentTypesHome.managed}" id="orderses">
+        <div class="actionButtons">
+            <s:button id="addorders"
+                   value="Add orders"
+                    view="/OrdersEdit.xhtml"
+             propagation="none">
+                 <f:param name="paymentTypesId"
+                         value="#{paymentTypesHome.instance.id}"/>
+                 <f:param name="ordersFrom" value="PaymentTypes"/>
+            </s:button>
+        </div>
+        </f:subview>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

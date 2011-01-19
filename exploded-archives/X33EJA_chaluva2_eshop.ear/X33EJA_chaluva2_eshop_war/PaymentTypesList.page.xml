@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page xmlns="http://jboss.com/products/seam/pages"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://jboss.com/products/seam/pages http://jboss.com/products/seam/pages-2.2.xsd">
+
+   <param name="firstResult" value="#{paymentTypesList.firstResult}"/>
+   <param name="sort" value="#{paymentTypesList.orderColumn}"/>
+   <param name="dir" value="#{paymentTypesList.orderDirection}"/>
+   <param name="logic" value="#{paymentTypesList.restrictionLogicOperator}"/>
+
+   <param name="from"/>
+   <param name="description" value="#{paymentTypesList.paymentTypes.description}"/>
+   <param name="name" value="#{paymentTypesList.paymentTypes.name}"/>
+
+</page>

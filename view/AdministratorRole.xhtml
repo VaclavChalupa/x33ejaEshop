@@ -1,0 +1,121 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <rich:panel>
+        <f:facet name="header">Administrator role Details</f:facet>
+
+        <s:decorate id="administrator" template="layout/display.xhtml">
+            <ui:define name="label">Administrator</ui:define>
+            <h:outputText value="#{administratorRoleHome.instance.id.administrator}"/>
+        </s:decorate>
+        <s:decorate id="role" template="layout/display.xhtml">
+            <ui:define name="label">Role</ui:define>
+            <h:outputText value="#{administratorRoleHome.instance.id.role}"/>
+        </s:decorate>
+
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+
+        <s:button view="/AdministratorRoleEdit.xhtml"
+                    id="edit"
+                 value="Edit"/>
+
+        <s:button view="/#{empty administratorRoleFrom ? 'AdministratorRoleList' : administratorRoleFrom}.xhtml"
+                    id="done"
+                 value="Done"/>
+
+    </div>
+
+    <rich:tabPanel switchType="ajax">
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/manytoone.gif" style="vertical-align: middle; padding-right: 4px;"/>Administrators</h:panelGroup>
+        </f:facet>
+    <div class="association" id="administratorsParent">
+
+        <h:outputText value="There is no administrators associated with this administratorRole."
+                   rendered="#{administratorRoleHome.instance.administrators == null}"/>
+
+        <rich:dataTable var="_administrators"
+                   value="#{administratorRoleHome.instance.administrators}"
+                rendered="#{administratorRoleHome.instance.administrators != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="administratorsTable">
+            <h:column>
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_administrators.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Archived</f:facet>
+                <h:outputText value="#{_administrators.archived}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Users id</f:facet>
+                <h:outputText value="#{_administrators.users.id}"/>
+            </h:column>
+            <h:column styleClass="action">
+                <f:facet name="header">Action</f:facet>
+                <s:link id="viewadministrators"
+                     value="View"
+                      view="/Administrators.xhtml">
+                    <f:param name="administratorsId"
+                           value="#{_administrators.id}"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </div>
+    </rich:tab>
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/manytoone.gif" style="vertical-align: middle; padding-right: 4px;"/>Roles</h:panelGroup>
+        </f:facet>
+    <div class="association" id="rolesParent">
+
+        <h:outputText value="There is no roles associated with this administratorRole."
+                   rendered="#{administratorRoleHome.instance.roles == null}"/>
+
+        <rich:dataTable var="_roles"
+                   value="#{administratorRoleHome.instance.roles}"
+                rendered="#{administratorRoleHome.instance.roles != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="rolesTable">
+            <h:column>
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_roles.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Rolename</f:facet>
+                <h:outputText value="#{_roles.rolename}"/>
+            </h:column>
+            <h:column styleClass="action">
+                <f:facet name="header">Action</f:facet>
+                <s:link id="viewroles"
+                     value="View"
+                      view="/Roles.xhtml">
+                    <f:param name="rolesId"
+                           value="#{_roles.id}"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </div>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

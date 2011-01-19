@@ -1,0 +1,155 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <rich:panel>
+        <f:facet name="header">Registered user product Details</f:facet>
+
+        <s:decorate id="product" template="layout/display.xhtml">
+            <ui:define name="label">Product</ui:define>
+            <h:outputText value="#{registeredUserProductHome.instance.id.product}"/>
+        </s:decorate>
+        <s:decorate id="registeredUser" template="layout/display.xhtml">
+            <ui:define name="label">Registered user</ui:define>
+            <h:outputText value="#{registeredUserProductHome.instance.id.registeredUser}"/>
+        </s:decorate>
+
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+
+        <s:button view="/RegisteredUserProductEdit.xhtml"
+                    id="edit"
+                 value="Edit"/>
+
+        <s:button view="/#{empty registeredUserProductFrom ? 'RegisteredUserProductList' : registeredUserProductFrom}.xhtml"
+                    id="done"
+                 value="Done"/>
+
+    </div>
+
+    <rich:tabPanel switchType="ajax">
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/manytoone.gif" style="vertical-align: middle; padding-right: 4px;"/>Product</h:panelGroup>
+        </f:facet>
+    <div class="association" id="productParent">
+
+        <h:outputText value="There is no product associated with this registeredUserProduct."
+                   rendered="#{registeredUserProductHome.instance.product == null}"/>
+
+        <rich:dataTable var="_product"
+                   value="#{registeredUserProductHome.instance.product}"
+                rendered="#{registeredUserProductHome.instance.product != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="productTable">
+            <h:column>
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_product.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Action price</f:facet>
+                <h:outputText value="#{_product.actionPrice}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Administrators id</f:facet>
+                <h:outputText value="#{_product.administrators.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Created</f:facet>
+                <h:outputText value="#{_product.created}">
+                    <s:convertDateTime type="time"/>
+                </h:outputText>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Description</f:facet>
+                <h:outputText value="#{_product.description}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">In action</f:facet>
+                <h:outputText value="#{_product.inAction}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Name</f:facet>
+                <h:outputText value="#{_product.name}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Price</f:facet>
+                <h:outputText value="#{_product.price}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">State</f:facet>
+                <h:outputText value="#{_product.state}"/>
+            </h:column>
+            <h:column styleClass="action">
+                <f:facet name="header">Action</f:facet>
+                <s:link id="viewproduct"
+                     value="View"
+                      view="/Product.xhtml">
+                    <f:param name="productId"
+                           value="#{_product.id}"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </div>
+    </rich:tab>
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/manytoone.gif" style="vertical-align: middle; padding-right: 4px;"/>Registered user</h:panelGroup>
+        </f:facet>
+    <div class="association" id="registeredUserParent">
+
+        <h:outputText value="There is no registeredUser associated with this registeredUserProduct."
+                   rendered="#{registeredUserProductHome.instance.registeredUser == null}"/>
+
+        <rich:dataTable var="_registeredUser"
+                   value="#{registeredUserProductHome.instance.registeredUser}"
+                rendered="#{registeredUserProductHome.instance.registeredUser != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="registeredUserTable">
+            <h:column>
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_registeredUser.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Addresses by billing address id</f:facet>
+                <h:outputText value="#{_registeredUser.addressesByBillingAddress.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Addresses by delivery address id</f:facet>
+                <h:outputText value="#{_registeredUser.addressesByDeliveryAddress.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Users id</f:facet>
+                <h:outputText value="#{_registeredUser.users.id}"/>
+            </h:column>
+            <h:column styleClass="action">
+                <f:facet name="header">Action</f:facet>
+                <s:link id="viewregisteredUser"
+                     value="View"
+                      view="/RegisteredUser.xhtml">
+                    <f:param name="registeredUserId"
+                           value="#{_registeredUser.id}"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </div>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page xmlns="http://jboss.com/products/seam/pages"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://jboss.com/products/seam/pages http://jboss.com/products/seam/pages-2.2.xsd">
+
+   <param name="firstResult" value="#{addressesList.firstResult}"/>
+   <param name="sort" value="#{addressesList.orderColumn}"/>
+   <param name="dir" value="#{addressesList.orderDirection}"/>
+   <param name="logic" value="#{addressesList.restrictionLogicOperator}"/>
+
+   <param name="from"/>
+   <param name="city" value="#{addressesList.addresses.city}"/>
+   <param name="country" value="#{addressesList.addresses.country}"/>
+   <param name="houseNumber" value="#{addressesList.addresses.houseNumber}"/>
+   <param name="postCode" value="#{addressesList.addresses.postCode}"/>
+   <param name="street" value="#{addressesList.addresses.street}"/>
+
+</page>

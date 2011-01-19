@@ -1,0 +1,108 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <rich:panel>
+        <f:facet name="header">Payment types Details</f:facet>
+
+        <s:decorate id="id" template="layout/display.xhtml">
+            <ui:define name="label">Id</ui:define>
+            <h:outputText value="#{paymentTypesHome.instance.id}"/>
+        </s:decorate>
+
+        <s:decorate id="description" template="layout/display.xhtml">
+            <ui:define name="label">Description</ui:define>
+            <h:outputText value="#{paymentTypesHome.instance.description}"/>
+        </s:decorate>
+
+        <s:decorate id="name" template="layout/display.xhtml">
+            <ui:define name="label">Name</ui:define>
+            <h:outputText value="#{paymentTypesHome.instance.name}"/>
+        </s:decorate>
+
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+
+        <s:button view="/PaymentTypesEdit.xhtml"
+                    id="edit"
+                 value="Edit"/>
+
+        <s:button view="/#{empty paymentTypesFrom ? 'PaymentTypesList' : paymentTypesFrom}.xhtml"
+                    id="done"
+                 value="Done"/>
+
+    </div>
+
+    <rich:tabPanel switchType="ajax">
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>Orderses</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="ordersesChildren">
+
+        <h:outputText value="There are no orderses associated with this paymentTypes."
+                   rendered="#{empty paymentTypesHome.orderses}"/>
+
+        <rich:dataTable value="#{paymentTypesHome.orderses}"
+                       var="_orders"
+                  rendered="#{not empty paymentTypesHome.orderses}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="ordersesTable">
+            <rich:column sortBy="#{_orders.id}">
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_orders.id}"/>
+            </rich:column>
+            <rich:column sortBy="#{_orders.created}">
+                <f:facet name="header">Created</f:facet>
+                <h:outputText value="#{_orders.created}">
+                    <s:convertDateTime type="time"/>
+                </h:outputText>
+            </rich:column>
+            <rich:column sortBy="#{_orders.description}">
+                <f:facet name="header">Description</f:facet>
+                <h:outputText value="#{_orders.description}"/>
+            </rich:column>
+            <rich:column sortBy="#{_orders.state}">
+                <f:facet name="header">State</f:facet>
+                <h:outputText value="#{_orders.state}"/>
+            </rich:column>
+            <h:column>
+                <f:facet name="header">Action</f:facet>
+                <s:link id="selectorders"
+                     value="Select"
+                      view="/Orders.xhtml">
+                    <f:param name="ordersId"
+                            value="#{_orders.id}"/>
+                    <f:param name="ordersFrom" value="PaymentTypes"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </h:form>
+
+    <div class="actionButtons">
+        <s:button
+               value="Add orders"
+                view="/OrdersEdit.xhtml">
+            <f:param name="paymentTypesId"
+                    value="#{paymentTypesHome.instance.id}"/>
+            <f:param name="ordersFrom" value="PaymentTypes"/>
+        </s:button>
+    </div>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

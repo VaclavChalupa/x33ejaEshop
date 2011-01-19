@@ -1,0 +1,271 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <rich:panel>
+        <f:facet name="header">Product Details</f:facet>
+
+        <s:decorate id="id" template="layout/display.xhtml">
+            <ui:define name="label">Id</ui:define>
+            <h:outputText value="#{productHome.instance.id}"/>
+        </s:decorate>
+
+        <s:decorate id="actionPrice" template="layout/display.xhtml">
+            <ui:define name="label">Action price</ui:define>
+            <h:outputText value="#{productHome.instance.actionPrice}"/>
+        </s:decorate>
+
+        <s:decorate id="created" template="layout/display.xhtml">
+            <ui:define name="label">Created</ui:define>
+            <h:outputText value="#{productHome.instance.created}">
+                <s:convertDateTime type="time"/>
+            </h:outputText>
+        </s:decorate>
+
+        <s:decorate id="description" template="layout/display.xhtml">
+            <ui:define name="label">Description</ui:define>
+            <h:outputText value="#{productHome.instance.description}"/>
+        </s:decorate>
+
+        <s:decorate id="inAction" template="layout/display.xhtml">
+            <ui:define name="label">In action</ui:define>
+            <h:outputText value="#{productHome.instance.inAction}"/>
+        </s:decorate>
+
+        <s:decorate id="name" template="layout/display.xhtml">
+            <ui:define name="label">Name</ui:define>
+            <h:outputText value="#{productHome.instance.name}"/>
+        </s:decorate>
+
+        <s:decorate id="price" template="layout/display.xhtml">
+            <ui:define name="label">Price</ui:define>
+            <h:outputText value="#{productHome.instance.price}"/>
+        </s:decorate>
+
+        <s:decorate id="state" template="layout/display.xhtml">
+            <ui:define name="label">State</ui:define>
+            <h:outputText value="#{productHome.instance.state}"/>
+        </s:decorate>
+
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+
+        <s:button view="/ProductEdit.xhtml"
+                    id="edit"
+                 value="Edit"/>
+
+        <s:button view="/#{empty productFrom ? 'ProductList' : productFrom}.xhtml"
+                    id="done"
+                 value="Done"/>
+
+    </div>
+
+    <rich:tabPanel switchType="ajax">
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/manytoone.gif" style="vertical-align: middle; padding-right: 4px;"/>Administrators</h:panelGroup>
+        </f:facet>
+    <div class="association" id="administratorsParent">
+
+        <h:outputText value="There is no administrators associated with this product."
+                   rendered="#{productHome.instance.administrators == null}"/>
+
+        <rich:dataTable var="_administrators"
+                   value="#{productHome.instance.administrators}"
+                rendered="#{productHome.instance.administrators != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="administratorsTable">
+            <h:column>
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_administrators.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Archived</f:facet>
+                <h:outputText value="#{_administrators.archived}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Users id</f:facet>
+                <h:outputText value="#{_administrators.users.id}"/>
+            </h:column>
+            <h:column styleClass="action">
+                <f:facet name="header">Action</f:facet>
+                <s:link id="viewadministrators"
+                     value="View"
+                      view="/Administrators.xhtml">
+                    <f:param name="administratorsId"
+                           value="#{_administrators.id}"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </div>
+    </rich:tab>
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>Order line items</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="orderLineItemsChildren">
+
+        <h:outputText value="There are no orderLineItems associated with this product."
+                   rendered="#{empty productHome.orderLineItems}"/>
+
+        <rich:dataTable value="#{productHome.orderLineItems}"
+                       var="_orderLineItem"
+                  rendered="#{not empty productHome.orderLineItems}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="orderLineItemsTable">
+            <rich:column sortBy="#{_orderLineItem.id}">
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_orderLineItem.id}"/>
+            </rich:column>
+            <rich:column sortBy="#{_orderLineItem.count}">
+                <f:facet name="header">Count</f:facet>
+                <h:outputText value="#{_orderLineItem.count}"/>
+            </rich:column>
+            <h:column>
+                <f:facet name="header">Action</f:facet>
+                <s:link id="selectorderLineItem"
+                     value="Select"
+                      view="/OrderLineItem.xhtml">
+                    <f:param name="orderLineItemId"
+                            value="#{_orderLineItem.id}"/>
+                    <f:param name="orderLineItemFrom" value="Product"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </h:form>
+
+    <div class="actionButtons">
+        <s:button
+               value="Add orderLineItem"
+                view="/OrderLineItemEdit.xhtml">
+            <f:param name="productId"
+                    value="#{productHome.instance.id}"/>
+            <f:param name="orderLineItemFrom" value="Product"/>
+        </s:button>
+    </div>
+    </rich:tab>
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>Photoses</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="photosesChildren">
+
+        <h:outputText value="There are no photoses associated with this product."
+                   rendered="#{empty productHome.photoses}"/>
+
+        <rich:dataTable value="#{productHome.photoses}"
+                       var="_photos"
+                  rendered="#{not empty productHome.photoses}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="photosesTable">
+            <rich:column sortBy="#{_photos.id}">
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_photos.id}"/>
+            </rich:column>
+            <rich:column sortBy="#{_photos.created}">
+                <f:facet name="header">Created</f:facet>
+                <h:outputText value="#{_photos.created}">
+                    <s:convertDateTime type="time"/>
+                </h:outputText>
+            </rich:column>
+            <rich:column sortBy="#{_photos.name}">
+                <f:facet name="header">Name</f:facet>
+                <h:outputText value="#{_photos.name}"/>
+            </rich:column>
+            <rich:column sortBy="#{_photos.order}">
+                <f:facet name="header">Order</f:facet>
+                <h:outputText value="#{_photos.order}"/>
+            </rich:column>
+            <h:column>
+                <f:facet name="header">Action</f:facet>
+                <s:link id="selectphotos"
+                     value="Select"
+                      view="/Photos.xhtml">
+                    <f:param name="photosId"
+                            value="#{_photos.id}"/>
+                    <f:param name="photosFrom" value="Product"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </h:form>
+
+    <div class="actionButtons">
+        <s:button
+               value="Add photos"
+                view="/PhotosEdit.xhtml">
+            <f:param name="productId"
+                    value="#{productHome.instance.id}"/>
+            <f:param name="photosFrom" value="Product"/>
+        </s:button>
+    </div>
+    </rich:tab>
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>Registered user products</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="registeredUserProductsChildren">
+
+        <h:outputText value="There are no registeredUserProducts associated with this product."
+                   rendered="#{empty productHome.registeredUserProducts}"/>
+
+        <rich:dataTable value="#{productHome.registeredUserProducts}"
+                       var="_registeredUserProduct"
+                  rendered="#{not empty productHome.registeredUserProducts}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="registeredUserProductsTable">
+            <rich:column sortBy="#{_registeredUserProduct.id.product}">
+                <f:facet name="header">Product</f:facet>
+                <h:outputText value="#{_registeredUserProduct.id.product}"/>
+            </rich:column>
+            <rich:column sortBy="#{_registeredUserProduct.id.registeredUser}">
+                <f:facet name="header">Registered user</f:facet>
+                <h:outputText value="#{_registeredUserProduct.id.registeredUser}"/>
+            </rich:column>
+            <h:column>
+                <f:facet name="header">Action</f:facet>
+                <s:link id="selectregisteredUserProduct"
+                     value="Select"
+                      view="/RegisteredUserProduct.xhtml">
+                    <f:param name="registeredUserProductProduct"
+                            value="#{_registeredUserProduct.id.product}"/>
+                    <f:param name="registeredUserProductRegisteredUser"
+                            value="#{_registeredUserProduct.id.registeredUser}"/>
+                    <f:param name="registeredUserProductFrom" value="Product"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </h:form>
+
+    <div class="actionButtons">
+        <s:button
+               value="Add registeredUserProduct"
+                view="/RegisteredUserProductEdit.xhtml">
+            <f:param name="productId"
+                    value="#{productHome.instance.id}"/>
+            <f:param name="registeredUserProductFrom" value="Product"/>
+        </s:button>
+    </div>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

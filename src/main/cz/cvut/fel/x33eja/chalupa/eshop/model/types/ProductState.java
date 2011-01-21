@@ -1,5 +1,11 @@
 package cz.cvut.fel.x33eja.chalupa.eshop.model.types;
 
+/**
+ * 
+ * @author Vaclav Chalupa (vac.chalupa@gmail.com)
+ * @version 1.0
+ * 
+ */
 public enum ProductState {
 
 	IN_STOCK("in stock"), OUT_OF_STOCK("out of stock");

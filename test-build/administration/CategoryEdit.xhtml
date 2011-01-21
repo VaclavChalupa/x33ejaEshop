@@ -1,0 +1,84 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="/layout/adminTemplate.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="categoryForm" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{categoryManager.managed ? 'Edit' : 'Add new'} Category</f:facet>
+
+
+            <s:decorate id="idField" template="/layout/edit.xhtml">
+                <ui:define name="label">Id</ui:define>
+                <h:inputText id="id"
+                       required="false"
+                       disabled="#{categoryManager.managed}"
+                          value="#{categoryManager.category.id}">
+                    <a:support event="onblur" reRender="idField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="nameField" template="/layout/edit.xhtml">
+                <ui:define name="label">Name</ui:define>
+                <h:inputText id="name"
+                       required="true"
+                           size="30"
+                      maxlength="30"
+                          value="#{categoryManager.category.name}">
+                    <a:support event="onblur" reRender="nameField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                required fields
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Save"
+                         action="#{categoryManager.persist}"
+                       rendered="#{!categoryManager.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Update"
+                         action="#{categoryManager.update}"
+                       rendered="#{categoryManager.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Delete"
+                         action="#{categoryManager.remove}"
+                      immediate="true"
+                       rendered="#{categoryManager.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="Cancel"
+             propagation="end"
+                    view="/Category.xhtml"
+                rendered="#{categoryManager.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Cancel"
+             propagation="end"
+                    view="/#{empty categoryFrom ? 'CategoryList' : categoryFrom}.xhtml"
+                rendered="#{!categoryManager.managed}"/>
+
+        </div>
+    </h:form>
+
+</ui:define>
+
+</ui:composition>

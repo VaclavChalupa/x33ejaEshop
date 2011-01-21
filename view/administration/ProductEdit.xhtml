@@ -1,0 +1,125 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="/layout/adminTemplate.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="product" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{productManager.managed ? 'Edit' : 'Add'} Product</f:facet>
+
+            <s:decorate id="actionPriceField" template="/layout/edit.xhtml">
+                <ui:define name="label">Action price</ui:define>
+                <h:inputText id="actionPrice"
+                          value="#{productManager.product.actionPrice}">
+                    <a:support event="onblur" reRender="actionPriceField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+            
+            <s:decorate id="descriptionField" template="/layout/edit.xhtml">
+                <ui:define name="label">Description</ui:define>
+                <h:inputTextarea id="description"
+                               cols="80"
+                               rows="3"
+                           required="true"
+                              value="#{productManager.product.description}"/>
+            </s:decorate>
+
+
+            <s:decorate id="inActionField" template="/layout/edit.xhtml">
+                <ui:define name="label">In action</ui:define>
+                <h:selectBooleanCheckbox id="inAction"
+                                   required="true"
+                                      value="#{productManager.product.inAction}"/>
+            </s:decorate>
+
+
+            <s:decorate id="nameField" template="/layout/edit.xhtml">
+                <ui:define name="label">Name</ui:define>
+                <h:inputTextarea id="name"
+                               cols="80"
+                               rows="3"
+                           required="true"
+                              value="#{productManager.product.name}"/>
+            </s:decorate>
+
+
+
+
+            <s:decorate id="priceField" template="/layout/edit.xhtml">
+                <ui:define name="label">Price</ui:define>
+                <h:inputText id="price"
+                       required="true"
+                          value="#{productManager.product.price}">
+                    <a:support event="onblur" reRender="priceField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+            
+            <s:decorate id="categoryField" template="/layout/edit.xhtml">
+                <ui:define name="label">Category</ui:define>
+                <h:selectOneMenu id="state" value="#{productManager.product.category}" required="true">
+                	<s:selectItems value="#{categoryAction.allCategories}" var="category" label="#{category.name}"/>
+                	<s:convertEntity />
+	  				<a:support event="onblur" reRender="stateField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:selectOneMenu>            
+            </s:decorate>
+            
+            <s:decorate id="stateField" template="/layout/edit.xhtml">
+                <ui:define name="label">State</ui:define>
+                <h:selectOneMenu id="state" value="#{productManager.product.state}" required="true">
+	  				<f:selectItems value="#{productManager.productStateValues}" />
+	  				<a:support event="onblur" reRender="stateField" bypassUpdates="true" ajaxSingle="true"/>
+	  			</h:selectOneMenu>                
+            </s:decorate>
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                required fields
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Save"
+                         action="#{productManager.persist}"
+                       rendered="#{!productManager.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Save"
+                         action="#{productManager.update}"
+                       rendered="#{productManager.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Delete"
+                         action="#{productManager.remove}"
+                      immediate="true"
+                       rendered="#{productManager.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="Cancel"
+             propagation="end"
+                    view="/Product.xhtml"
+                rendered="#{productManager.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Cancel"
+             propagation="end"
+                    view="/administration/#{empty productFrom ? 'ProductList' : productFrom}.xhtml"
+                rendered="#{!productManager.managed}"/>
+
+        </div>
+    </h:form>
+
+</ui:define>
+
+</ui:composition>

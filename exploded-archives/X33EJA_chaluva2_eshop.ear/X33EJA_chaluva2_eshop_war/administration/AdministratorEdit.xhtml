@@ -1,0 +1,99 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="/layout/adminTemplate.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="administrator" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{administratorManager.managed ? 'Edit' : 'Add'} Administrator</f:facet>
+			
+			<ui:include src="../#{formBuilderGenerator.generateForm('cz.cvut.fel.x33eja.chalupa.eshop.model.Administrator', true, 'edit')}">
+				<ui:param name="bean" value="#{administratorManager.administrator}"/>
+				<ui:param name="template" value="/layout/edit.xhtml"/>
+				<ui:param name="ajaxValidation" value="true"/>
+			</ui:include>	
+			
+            <div style="clear:both">
+                <span class="required">*</span>
+                required fields
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Save"
+                         action="#{administratorManager.persist}"
+                       rendered="#{!administratorManager.managed}"
+                       disabled="#{administratorManager.administrator.roles.size() le 0}"/>
+
+            <h:commandButton id="update"
+                          value="Update"
+                         action="#{administratorManager.update}"
+                       rendered="#{administratorManager.managed}"
+                       disabled="#{administratorManager.administrator.roles.size() le 0}"/>
+
+            <h:commandButton id="delete"
+                          value="Delete"
+                         action="#{administratorManager.remove}"
+                      immediate="true"
+                       rendered="#{administratorManager.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="Cancel"
+             propagation="end"
+                    view="/administration/Administrators.xhtml"
+                rendered="#{administratorManager.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Cancel"
+             propagation="end"
+                    view="/#{empty administratorFrom ? 'administration/AdministratorsList' : administratorsFrom}.xhtml"
+                rendered="#{!administratorManager.managed}"/>
+
+        </div>
+    </h:form>
+
+		<rich:tabPanel switchType="ajax">
+
+			<rich:tab label="Administrator roles">
+				<h:form>
+				<h:dataTable value="#{adminRoles}" var="_adminRole">
+					<rich:column sortBy="#{_adminRole.id}" styleClass="action">
+						<f:facet name="header">
+							<h:outputText value="Id" />
+						</f:facet>
+						<h:outputText value="#{_adminRole.id}" />
+					</rich:column>
+					<rich:column sortBy="#{_adminRole.name}" styleClass="action">
+						<f:facet name="header">
+							<h:outputText value="Name" />
+						</f:facet>
+						<h:outputText value="#{_adminRole.rolename}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">
+							<h:outputText value="Action" />
+						</f:facet>
+						<h:commandButton value="Add" action="#{administratorManager.addRole}" rendered="#{not administratorManager.administrator.roles.contains(_adminRole)}"/>
+						<h:commandButton value="Remove" action="#{administratorManager.removeRole}" rendered="#{administratorManager.administrator.roles.contains(_adminRole)}" />
+					</rich:column>
+				</h:dataTable>
+				</h:form>
+       
+    		</rich:tab>
+
+		</rich:tabPanel>
+	</ui:define>
+
+</ui:composition>

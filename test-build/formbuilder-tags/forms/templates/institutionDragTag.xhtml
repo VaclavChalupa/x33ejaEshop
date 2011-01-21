@@ -1,0 +1,20 @@
+ <!-- 
+ <rich:dragIndicator id="$idindicatorInstitution" />
+  use  <a4j:form ajaxSubmit="true" id="$idForm"> 
+ -->
+ 
+  <s:div id="space" rendered="#{edit}" styleClass="spacer"/>
+ 
+ <util:institutionDialog id="$id" 
+            entityList="#{teamManager.institutionSimpleList}"
+               manager="#{$entityManager}"
+              setValue="institution"
+              reRender="$idDiv,#{reRender}"/>
+ 
+
+ <util:dropBoxText id="$id"
+                label="$label"
+         displayValue="#{$entityManager.institution.name}"
+             typeDrop="Institution"
+              manager="#{$entityManager}"
+         dropListener="dropInstitution" /> 

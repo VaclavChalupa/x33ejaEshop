@@ -11,6 +11,12 @@
       <param-value>glassX</param-value>
    </context-param>
 
+	 <!-- Load custom tag for generated tags by FormBuilder -->
+	 <context-param>
+	    <param-name>facelets.LIBRARIES</param-name>
+	    <param-value>/WEB-INF/formBuilder.taglib.xml</param-value>
+	 </context-param>
+
    <!-- Suppress spurious stylesheets -->
 
    <context-param>

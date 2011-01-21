@@ -1,0 +1,129 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="/layout/adminTemplate.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="administratorSearch" styleClass="edit"> 
+		
+        <rich:simpleTogglePanel label="Administrator Search Filter" switchType="ajax">
+	
+			<ui:include src="../#{formBuilderGenerator.generateForm('cz.cvut.fel.x33eja.chalupa.eshop.model.Administrator', true, 'search')}">
+				<ui:param name="bean" value="#{administratorList.administrator}"/>
+				<ui:param name="template" value="/layout/display.xhtml"/>				
+				<ui:param name="validateRequired" value="false"/>
+			</ui:include>
+			
+            <s:decorate template="/layout/display.xhtml">
+                <ui:define name="label">Match</ui:define>
+                <h:selectOneRadio id="logic" value="#{administratorList.restrictionLogicOperator}" styleClass="radio">
+                    <f:selectItem itemLabel="All" itemValue="and"/>
+                    <f:selectItem itemLabel="Any" itemValue="or"/>
+                </h:selectOneRadio>
+            </s:decorate>
+
+        </rich:simpleTogglePanel>
+
+        <div class="actionButtons">
+            <h:commandButton id="search" value="Search" action="AdministratorList.xhtml"/>
+            <s:button id="reset" value="Reset" includePageParams="false"/>
+        </div>
+
+    </h:form>
+
+    <rich:panel>
+        <f:facet name="header">Administrator Search Results (#{empty administratorList.resultList ? 0 : (administratorsList.paginated ? administratorsList.resultCount : administratorList.resultList.size)})</f:facet>
+    <div class="results" id="administratorList">
+
+    <h:outputText value="The administrator search returned no results."
+               rendered="#{empty administratorList.resultList}"/>
+
+    <rich:dataTable id="administratorList"
+                var="_administrator"
+              value="#{administratorList.resultList}"
+           rendered="#{not empty administratorList.resultList}">
+                
+        <ui:include src="../#{formBuilderGenerator.generateTable('cz.cvut.fel.x33eja.chalupa.eshop.model.Administrator', true, 'list-search')}">
+			<ui:param name="bean" value="#{_administrator}"/>
+			<ui:param name="searchedEntityAttribute" value="user"/>
+			<ui:param name="entityList" value="#{administratorList}"/>
+			<ui:param name="template" value="/layout/normalTable.xhtml"/>
+		</ui:include>
+        
+        <rich:column styleClass="action">
+            <f:facet name="header">Action</f:facet>
+            <s:link view="/#{empty from ? 'administration/Administrator' : from}.xhtml"
+                   value="#{empty from ? 'View' : 'Select'}"
+             propagation="#{empty from ? 'none' : 'default'}"
+                      id="administratorViewId">
+                <f:param name="administratorId"
+                        value="#{_administrator.id}"/>
+            </s:link>
+            #{' '}
+            <s:link view="/administration/AdministratorEdit.xhtml"
+                   value="Edit"
+             propagation="none"
+                      id="administratorEdit"
+                rendered="#{empty from}">
+                <f:param name="administratorId"
+                        value="#{_administrator.id}"/>
+            </s:link>
+        </rich:column>
+    </rich:dataTable>
+
+    </div>
+    </rich:panel>
+
+    <div class="tableControl">
+
+        <s:link view="/administration/AdministratorList.xhtml"
+            rendered="#{administratorList.previousExists}"
+               value="#{messages.left}#{messages.left} First Page"
+                  id="firstPage">
+          <f:param name="firstResult" value="0"/>
+        </s:link>
+
+        <s:link view="/administration/AdministratorsList.xhtml"
+            rendered="#{administratorList.previousExists}"
+               value="#{messages.left} Previous Page"
+                  id="previousPage">
+            <f:param name="firstResult"
+                    value="#{administratorList.previousFirstResult}"/>
+        </s:link>
+
+        <s:link view="/administration/AdministratorsList.xhtml"
+            rendered="#{administratorList.nextExists}"
+               value="Next Page #{messages.right}"
+                  id="nextPage">
+            <f:param name="firstResult"
+                    value="#{administratorList.nextFirstResult}"/>
+        </s:link>
+
+        <s:link view="/administration/AdministratorList.xhtml"
+            rendered="#{administratorList.nextExists}"
+               value="Last Page #{messages.right}#{messages.right}"
+                  id="lastPage">
+            <f:param name="firstResult"
+                    value="#{administratorList.lastFirstResult}"/>
+        </s:link>
+
+    </div>
+
+    <s:div styleClass="actionButtons" rendered="#{empty from}">
+        <s:button view="/administration/AdministratorEdit.xhtml"
+                    id="create"
+           propagation="none"
+                 value="Create new administrator">
+            <f:param name="administratorId"/>
+        </s:button>
+    </s:div>
+
+</ui:define>
+
+</ui:composition>

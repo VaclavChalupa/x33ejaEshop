@@ -1,0 +1,9 @@
+<!DOCTYPE suite SYSTEM "http://beust.com/testng/testng-1.0.dtd" >
+
+<suite name="DeliveryTypeActionLocal Tests" verbose="2" parallel="false">
+   <test name="DeliveryTypeActionLocal Test">
+     <classes>
+       <class name="cz.cvut.fel.x33eja.chalupa.eshop.test.DeliveryTypeActionLocalTest"/>       
+     </classes>
+   </test>	
+</suite>

@@ -1,0 +1,55 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+    <ui:define name="body">
+
+        <h1>Shopping Cart</h1>        
+        
+        <rich:tabPanel switchType="ajax">
+									
+			<rich:tab label="Products roles">
+				
+				<h:outputText value="no products"
+               rendered="#{empty orderLines or orderLines.size le 1}"/>
+				
+				<h:form>
+				<h:dataTable value="#{orderLines}" var="_line" rendered="#{!empty orderLines and orderLines.size ge 1}">
+					<rich:column sortBy="#{_line.product.name}" styleClass="action">
+						<f:facet name="header">
+							<h:outputText value="Product" />
+						</f:facet>
+						<h:outputText value="#{_line.product.name}" />
+					</rich:column>
+					<rich:column sortBy="#{_line.count}" styleClass="action">
+						<f:facet name="header">
+							<h:outputText value="Count" />
+						</f:facet>
+						<h:outputText value="#{_line.count}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">
+							<h:outputText value="Action" />
+						</f:facet><h:commandButton value="Remove" action="#{cartAction.removeProduct}"/>
+					</rich:column>
+				</h:dataTable>
+				</h:form>
+       
+    		</rich:tab>
+
+		</rich:tabPanel>
+        
+        <s:div styleClass="actionButtons" rendered="#{empty from}">
+        <h:form>
+	        <h:commandButton action="#{cartAction.confirmOrder}" rendered="#{s:hasRole('customer')}" value="Confirm"/>
+        </h:form>
+    	</s:div>
+
+    </ui:define>
+</ui:composition>

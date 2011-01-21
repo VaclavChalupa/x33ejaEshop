@@ -53,5 +53,6 @@
 			<attribute name="owner.project.facets" value="java"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="lib/formBuilder_2.0.prev-simple.jar"/>
 	<classpathentry kind="output" path="test-build"/>
 </classpath>

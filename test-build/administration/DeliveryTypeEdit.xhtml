@@ -1,0 +1,95 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="/layout/adminTemplate.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="deliveryType" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{deliveryTypeManager.managed ? 'Edit' : 'Add'} Delivery type</f:facet>
+
+            <s:decorate id="descriptionField" template="/layout/edit.xhtml">
+                <ui:define name="label">Description</ui:define>
+                <h:inputTextarea id="description"
+                               cols="80"
+                               rows="3"
+                              value="#{deliveryTypeManager.deliveryType.description}"/>
+            </s:decorate>
+
+
+            <s:decorate id="nameField" template="/layout/edit.xhtml">
+                <ui:define name="label">Name</ui:define>
+                <h:inputText id="name"
+                       required="true"
+                           size="100"
+                      maxlength="100"
+                          value="#{deliveryTypeManager.deliveryType.name}">
+                    <a:support event="onblur" reRender="nameField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+
+            <s:decorate id="priceField" template="/layout/edit.xhtml">
+                <ui:define name="label">Price</ui:define>
+                <h:inputText id="price"
+                       required="true"
+                          value="#{deliveryTypeManager.deliveryType.price}">
+                    <a:support event="onblur" reRender="priceField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                required fields
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Save"
+                         action="#{deliveryTypeManager.persist}"
+                       rendered="#{!deliveryTypeManager.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Update"
+                         action="#{deliveryTypeManager.update}"
+                       rendered="#{deliveryTypeManager.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Delete"
+                         action="#{deliveryTypeManager.remove}"
+                      immediate="true"
+                       rendered="#{deliveryTypeManager.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="Cancel"
+             propagation="end"
+                    view="/administration/DeliveryTypes.xhtml"
+                rendered="#{deliveryTypeManager.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Cancel"
+             propagation="end"
+                    view="/#{empty deliveryTypeFrom ? 'administration/DeliveryTypeList' : deliveryTypeFrom}.xhtml"
+                rendered="#{!deliveryTypeManager.managed}"/>
+
+        </div>
+    </h:form>
+
+<!-- 
+
+ -->
+</ui:define>
+
+</ui:composition>

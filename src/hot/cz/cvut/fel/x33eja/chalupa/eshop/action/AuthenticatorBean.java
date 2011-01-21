@@ -28,14 +28,18 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Logger;
 import org.jboss.seam.annotations.Name;
+import org.jboss.seam.annotations.Out;
+import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.log.Log;
 import org.jboss.seam.security.Credentials;
 import org.jboss.seam.security.Identity;
 
 import cz.cvut.fel.x33eja.chalupa.eshop.model.Administrator;
+import cz.cvut.fel.x33eja.chalupa.eshop.model.RegisteredUser;
 import cz.cvut.fel.x33eja.chalupa.eshop.model.Role;
 
 /**
@@ -62,30 +66,61 @@ public class AuthenticatorBean implements Authenticator {
 	@In
 	Credentials credentials; // form security - return username, passwd
 
-	// @Out(required = true, value = "currentUser", scope = ScopeType.SESSION)
-	// private CurrentUser currentUser;
+	@Out(required = false, scope = ScopeType.SESSION)
+	private Administrator currentAdministrator;
+
+	@Out(required = false, scope = ScopeType.SESSION)
+	private RegisteredUser currentUser;
 
 	@Override
 	public boolean authenticate() {
 
 		log.info("authenticating {0}", credentials.getUsername());
 
+		String authenticationType = (String) Contexts.getPageContext().get(
+				"authenticationType");
+
 		try {
 
-			Administrator admin = (Administrator) em
-					.createNamedQuery("User.findByLogin")
-					.setParameter("password", credentials.getPassword())
-					.setParameter("username", credentials.getUsername())
-					.getSingleResult();
+			if (authenticationType != null
+					&& authenticationType.equals("admin")) {
+				// admin login
+				Administrator admin = (Administrator) em
+						.createNamedQuery("Administrator.findByUsername")
+						.setParameter("username", credentials.getUsername())
+						.getSingleResult();
 
-			currentUser = new CurrentUser(admin.getFirstname(),
-					admin.getLastname());
+				String hp = Administrator.generatePasswordHash(
+						credentials.getPassword(), admin.getUsername());
 
-			if (admin.getRoles() != null) {
-				for (Role role : admin.getRoles()) {
-					identity.addRole(role.getRolename());
-					currentUser.getRoles().add(role);
+				log.info("HESLA {0} - {1}", hp, admin.getPassword());
+
+				if (!hp.equals(admin.getPassword())) {
+					return false;
 				}
+
+				// outject
+				currentAdministrator = admin;
+
+				if (admin.getRoles() != null) {
+					for (Role role : admin.getRoles()) {
+						identity.addRole(role.getRolename());
+					}
+				}
+
+			} else {
+				if (!credentials.getUsername().equals("user")
+						|| !credentials.getPassword().equals("test")) {
+					return false;
+				}
+
+				currentUser = new RegisteredUser();
+				currentUser.setEmail("user@test.com");
+				currentUser.setFirstname("jmeno");
+				currentUser.setSurname("prijmeni");
+				currentUser.setUsername("user");
+				identity.addRole("customer");
+
 			}
 
 			return true;
@@ -95,6 +130,14 @@ public class AuthenticatorBean implements Authenticator {
 			return false;
 		}
 
+	}
+
+	public void setAdminAuthentizationType() {
+		Contexts.getConversationContext().set("authentizationType", 1);
+	}
+
+	public void setUserAuthentizationType() {
+		Contexts.getConversationContext().set("authentizationType", 0);
 	}
 
 	/*

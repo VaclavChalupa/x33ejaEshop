@@ -7,7 +7,13 @@ import org.jboss.seam.framework.EntityQuery;
 
 import cz.cvut.fel.x33eja.chalupa.eshop.model.PaymentType;
 
-@Name("paymentTypesList")
+/**
+ * 
+ * @author Vaclav Chalupa (vac.chalupa@gmail.com)
+ * @version 1.0
+ * 
+ */
+@Name("paymentTypeList")
 public class PaymentTypesList extends EntityQuery<PaymentType> {
 
 	/**
@@ -18,8 +24,8 @@ public class PaymentTypesList extends EntityQuery<PaymentType> {
 	private static final String EJBQL = "select paymentType from PaymentType paymentType";
 
 	private static final String[] RESTRICTIONS = {
-			"lower(paymentType.description) like lower(concat(#{paymentTypesList.paymentType.description},'%'))",
-			"lower(paymentType.name) like lower(concat(#{paymentTypesList.paymentType.name},'%'))", };
+			"lower(paymentType.description) like lower(concat(#{paymentTypeList.paymentType.description},'%'))",
+			"lower(paymentType.name) like lower(concat(#{paymentTypeList.paymentType.name},'%'))", };
 
 	private final PaymentType paymentType = new PaymentType();
 
@@ -33,7 +39,4 @@ public class PaymentTypesList extends EntityQuery<PaymentType> {
 		return paymentType;
 	}
 
-	public PaymentType getPaymentTypes() {
-		return paymentType;
-	}
 }

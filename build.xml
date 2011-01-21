@@ -210,6 +210,8 @@
         <copy todir="${war.dir}/WEB-INF">
             <fileset dir="${basedir}/resources/WEB-INF">
                 <include name="*.*"/>
+            	<include name="form-builder/form-config/form-config.xml"/>
+            	<include name="form-builder/table-config/form-config.xml"/>
                 <include name="lib/*.*"/>
                 <exclude name="web.xml"/>
             </fileset>

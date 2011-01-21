@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <!-- output directory -->
+    <output-directory>../../../formbuilder-output/forms/$role/$directory/</output-directory>
+    
+    <!-- tag definition directory -->
+    <tags-definition-directory>../../../formbuilder-tags/forms/templates/</tags-definition-directory>
+
+    <!-- output file suffix -->
+    <output-file-suffix>xhtml</output-file-suffix>
+
+    <!-- header placed to the top of output file
+     -->
+    <header-file>../../layouts/header.xhtml</header-file>
+    
+    <!-- tail placed to the bottom of output file
+     -->
+    <tail-file>../../layouts/tail.xhtml</tail-file>
+    
+    <!-- generated form caching -->
+    <form-caching>true</form-caching>
+    
+    <!-- ondemand form generating - support for seam security @Restrict annotation -->
+    <on-demand-generating>true</on-demand-generating>
+    
+    <!-- 
+          type to tagFile mapping
+          * you can specify default "length" anf "size" for input
+          * you can specify single guard condition, 
+          * if it is satisfied use another tag from guard-file-path
+          <guard>maxLength &gt; 255</guard>
+          <guard-file-path>inputTextAreaTag.xhtml</guard-file-path>
+     -->
+    
+    <use-types>
+        <name>Boolean</name>
+        <file-path>inputBooleanTag.xhtml</file-path>
+    </use-types>
+    <use-types>
+        <name>boolean</name>
+        <file-path>inputBooleanTag.xhtml</file-path>
+    </use-types>
+    <use-types>
+        <name>Country</name>
+        <file-path>entityTag.xhtml</file-path>
+    </use-types>
+    <use-types>
+        <name>TeamManager</name>
+        <file-path>personDragTag.xhtml</file-path>
+    </use-types>
+    <use-types>
+        <name>Person</name>
+        <file-path>personDragTag.xhtml</file-path>
+    </use-types>
+    <use-types>
+        <name>Institution</name>
+        <file-path>institutionDragTag.xhtml</file-path>
+    </use-types>
+    <use-types>
+        <default-length>50</default-length>
+        <default-size>10</default-size>
+        <name>Integer</name>
+        <file-path>inputNumberTag.xhtml</file-path>
+    </use-types>
+    <use-types>
+        <default-length>50</default-length>
+        <default-size>10</default-size>
+        <name>int</name>
+        <file-path>inputNumberTag.xhtml</file-path>
+    </use-types>
+    <use-types>
+        <default-length>50</default-length>
+        <default-size>10</default-size>
+        <name>Long</name>
+        <file-path>inputNumberTag.xhtml</file-path>
+    </use-types>
+    <use-types>
+        <default-length>50</default-length>
+        <default-size>10</default-size>
+        <name>Short</name>
+        <file-path>inputNumberTag.xhtml</file-path>
+    </use-types>
+    <use-types>
+        <name>Enum</name>
+        <file-path>enumTag.xhtml</file-path>
+    </use-types>
+    <use-types>
+        <name>Gender</name>
+        <file-path>inputGenderTag.xhtml</file-path>
+    </use-types>
+    <use-types>
+        <name>Date</name>
+        <file-path>dateTag.xhtml</file-path>
+        <guards if="dateStamp == true" tag="timestampTag.xhtml" />
+        <guards if="dateTime == true" tag="inputTextTag.xhtml" />
+    </use-types>
+    <use-types>
+        <name>Color</name>
+        <file-path>colorTag.xhtml</file-path>
+    </use-types>
+    <use-types>
+        <default-length>255</default-length>
+        <default-size>30</default-size>
+        <name>String</name>
+        <file-path>inputTextTag.xhtml</file-path>
+        
+        <guard if="var:cz.cvut.fel.formbuilder.test.Person.lastName" />
+        <guard if="email == true" tag="inputEmailTag.xhtml" />
+        <guard if="password == true" tag="inputPasswordTag.xhtml" />
+        <!-- 
+        <guard if="unique == true" tag="inputTextAjaxTag.xhtml" />
+         -->
+        <guard if="link == true" tag="inputLinkTag.xhtml" />
+        <guard if="html == true" tag="inputHtmlTag.xhtml" />
+        <guard if="maxLength &gt; 255" tag="inputTextAreaTag.xhtml" />
+    </use-types>
+    
+    
+    <!-- Ignore the following entityBean fields for tag generation 
+    <ignore-fields>
+        <name>id</name>
+    </ignore-fields>
+    -->
+    <ignore-fields>
+        <name>version</name>
+    </ignore-fields>
+    <ignore-fields>
+        <name>createdBy</name>
+    </ignore-fields>
+</configuration>

@@ -10,28 +10,144 @@
 
     <ui:define name="body">
 
-        <h1>Welcome to Seam!</h1>
+        <h1>#{messages['home.header']}</h1>
+        
+        
         <rich:panel>
-            <h:panelGrid columns="2">
-                <h:graphicImage value="/img/seamlogo.png" alt="Seam logo"/>
-                <s:div styleClass="info">
-                    <p><strong>Your seam-gen project is deployed!</strong> Here are some of the features this project provides:</p>
-                    <ul class="bullets">
-                        <li>Ant build script</li>
-                        <li>Deployment to JBoss AS (EAR or WAR)</li>
-                        <li>Development and production profiles</li>
-                        <li>Integration testing using TestNG and Embedded JBoss</li>
-                        <li>JavaBean or EJB 3.0 Seam components</li>
-                        <li>JPA entity classes</li>
-                        <li>A configurable DataSource and JPA EntityManager</li>
-                        <li>Templated Facelets views</li>
-                        <li>RichFaces panels and tables</li>
-                        <li>Default CSS stylesheet</li>
-                        <li>Internationalization support</li>
-                    </ul>
-                </s:div>
-            </h:panelGrid>
-        </rich:panel>
+        <f:facet name="header">#{messages['home.products']}: (#{empty productList.resultList ? 0 : (productList.paginated ? productList.resultCount : productList.resultList.size)})</f:facet>
+    <div class="results" id="productList">
+
+    <h:outputText value="#{messages['home.noproducts']}"
+               rendered="#{empty productList.resultList}"/>
+
+    <rich:dataTable id="productList"
+                var="_product"
+              value="#{productList.resultList}"
+           rendered="#{not empty productList.resultList}">
+          
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{productList}"/>
+                    <ui:param name="propertyLabel" value="Category"/>
+                    <ui:param name="propertyPath" value="product.category.name"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_product.category.name}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{productList}"/>
+                    <ui:param name="propertyLabel" value="Created"/>
+                    <ui:param name="propertyPath" value="product.created"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_product.created}">
+                <s:convertDateTime type="time"/>
+            </h:outputText>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{productList}"/>
+                    <ui:param name="propertyLabel" value="Description"/>
+                    <ui:param name="propertyPath" value="product.description"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_product.description}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{productList}"/>
+                    <ui:param name="propertyLabel" value="In action"/>
+                    <ui:param name="propertyPath" value="product.inAction"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_product.inAction}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{productList}"/>
+                    <ui:param name="propertyLabel" value="Name"/>
+                    <ui:param name="propertyPath" value="product.name"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_product.name}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{productList}"/>
+                    <ui:param name="propertyLabel" value="Price"/>
+                    <ui:param name="propertyPath" value="product.price"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_product.price}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{productList}"/>
+                    <ui:param name="propertyLabel" value="State"/>
+                    <ui:param name="propertyPath" value="product.state.label"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_product.state.label}"/>
+        </h:column>   
+        <rich:column styleClass="action">
+            <f:facet name="header">Detail</f:facet>            
+            <s:link view="/Product.xhtml"
+                   value="#{messages['home.productdetail']}"
+             propagation="none"
+                      id="productDetail"
+                rendered="#{empty from}">
+                <f:param name="productId"
+                        value="#{_product.id}"/>
+            </s:link>
+        </rich:column>     
+    </rich:dataTable>
+
+    </div>
+    </rich:panel>
+
+    <div class="tableControl">
+
+        <s:link view="/home.xhtml"
+            rendered="#{productList.previousExists}"
+               value="#{messages.left}#{messages.left} First Page"
+                  id="firstPage">
+          <f:param name="firstResult" value="0"/>
+        </s:link>
+
+        <s:link view="/home.xhtml"
+            rendered="#{productList.previousExists}"
+               value="#{messages.left} Previous Page"
+                  id="previousPage">
+            <f:param name="firstResult"
+                    value="#{productList.previousFirstResult}"/>
+        </s:link>
+
+        <s:link view="/home.xhtml"
+            rendered="#{productList.nextExists}"
+               value="Next Page #{messages.right}"
+                  id="nextPage">
+            <f:param name="firstResult"
+                    value="#{productList.nextFirstResult}"/>
+        </s:link>
+
+        <s:link view="/home.xhtml"
+            rendered="#{productList.nextExists}"
+               value="Last Page #{messages.right}#{messages.right}"
+                  id="lastPage">
+            <f:param name="firstResult"
+                    value="#{productList.lastFirstResult}"/>
+        </s:link>
+
+    </div>
+        
 
     </ui:define>
 </ui:composition>

@@ -4,19 +4,13 @@
       xsi:schemaLocation="http://jboss.com/products/seam/pages http://jboss.com/products/seam/pages-2.2.xsd">
 
    <param name="productFrom"/>
-   <param name="productId" value="#{productHome.productId}"/>
-   <param name="administratorsFrom"/>
-   <param name="administratorsId" value="#{administratorsHome.administratorsId}"/>
-   <param name="usersFrom"/>
-   <param name="usersId" value="#{usersHome.usersId}"/>
-   <param name="registeredUserFrom"/>
-   <param name="registeredUserId" value="#{registeredUserHome.registeredUserId}"/>
-   <param name="addressesFrom"/>
-   <param name="addressesId" value="#{addressesHome.addressesId}"/>
-
-
-
-
-
-
+   <param name="productId" value="#{productManager.productId}"/>
+   
+   <navigation from-action="#{productManager.addToCart}">
+      <rule if-outcome="added">
+         <end-conversation/>
+         <redirect view-id="/cart.xhtml"/>
+      </rule>
+   </navigation>
+   
 </page>

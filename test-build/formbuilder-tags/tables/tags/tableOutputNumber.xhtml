@@ -1,0 +1,20 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j">
+
+	<ui:decorate template="#{template}">
+		<f:facet name="header">
+	    	<ui:include src="/layout/sort.xhtml">
+	        	<ui:param name="entityList" value="#{entityList}"/>
+	            <ui:param name="propertyLabel" value="#{label}"/>
+	            <ui:param name="propertyPath" value="#{searchedEntityAttribute}.#{id}"/>
+	        </ui:include>
+	    </f:facet>
+	    <h:outputText value="# #{value}"/>
+	</ui:decorate>
+</ui:composition>

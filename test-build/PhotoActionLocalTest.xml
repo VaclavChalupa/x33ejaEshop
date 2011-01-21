@@ -1,0 +1,9 @@
+<!DOCTYPE suite SYSTEM "http://beust.com/testng/testng-1.0.dtd" >
+
+<suite name="PhotoActionLocal Tests" verbose="2" parallel="false">
+   <test name="PhotoActionLocal Test">
+     <classes>
+       <class name="cz.cvut.fel.x33eja.chalupa.eshop.test.PhotoActionLocalTest"/>       
+     </classes>
+   </test>	
+</suite>

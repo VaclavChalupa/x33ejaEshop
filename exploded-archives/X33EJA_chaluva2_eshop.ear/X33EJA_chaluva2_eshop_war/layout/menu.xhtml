@@ -7,106 +7,19 @@
     xmlns:rich="http://richfaces.org/rich">
     <rich:toolBarGroup>
         <h:outputText value="#{projectName}:"/>
-        <s:link id="menuHomeId" view="/home.xhtml" value="Home" propagation="none"/>
+        <s:link id="menuHomeId" view="/home.xhtml" value="#{messages['menu.home']}" propagation="none"/>
+        <h:outputText value="select language:"/>
+        <ui:include src="localeSelector.xhtml" />
     </rich:toolBarGroup>
-    <rich:dropDownMenu showDelay="250" hideDelay="0" submitMode="none">
-        <f:facet name="label">Browse data</f:facet>
-	<rich:menuItem>
-    	<s:link view="/AdministratorsList.xhtml"
-           	value="Administrators List"
-           	id="AdministratorsId"
-			includePageParams="false"
-     		propagation="none"/>
-     </rich:menuItem>
-	<rich:menuItem>
-    	<s:link view="/PhotosList.xhtml"
-           	value="Photos List"
-           	id="PhotosId"
-			includePageParams="false"
-     		propagation="none"/>
-     </rich:menuItem>
-	<rich:menuItem>
-    	<s:link view="/AdministratorRoleList.xhtml"
-           	value="AdministratorRole List"
-           	id="AdministratorRoleId"
-			includePageParams="false"
-     		propagation="none"/>
-     </rich:menuItem>
-	<rich:menuItem>
-    	<s:link view="/PaymentTypesList.xhtml"
-           	value="PaymentTypes List"
-           	id="PaymentTypesId"
-			includePageParams="false"
-     		propagation="none"/>
-     </rich:menuItem>
-	<rich:menuItem>
-    	<s:link view="/RolesList.xhtml"
-           	value="Roles List"
-           	id="RolesId"
-			includePageParams="false"
-     		propagation="none"/>
-     </rich:menuItem>
-	<rich:menuItem>
-    	<s:link view="/OrderLineItemList.xhtml"
-           	value="OrderLineItem List"
-           	id="OrderLineItemId"
-			includePageParams="false"
-     		propagation="none"/>
-     </rich:menuItem>
-	<rich:menuItem>
-    	<s:link view="/AddressesList.xhtml"
-           	value="Addresses List"
-           	id="AddressesId"
-			includePageParams="false"
-     		propagation="none"/>
-     </rich:menuItem>
-	<rich:menuItem>
-    	<s:link view="/ProductList.xhtml"
-           	value="Product List"
-           	id="ProductId"
-			includePageParams="false"
-     		propagation="none"/>
-     </rich:menuItem>
-	<rich:menuItem>
-    	<s:link view="/RegisteredUserProductList.xhtml"
-           	value="RegisteredUserProduct List"
-           	id="RegisteredUserProductId"
-			includePageParams="false"
-     		propagation="none"/>
-     </rich:menuItem>
-	<rich:menuItem>
-    	<s:link view="/OrdersList.xhtml"
-           	value="Orders List"
-           	id="OrdersId"
-			includePageParams="false"
-     		propagation="none"/>
-     </rich:menuItem>
-	<rich:menuItem>
-    	<s:link view="/UsersList.xhtml"
-           	value="Users List"
-           	id="UsersId"
-			includePageParams="false"
-     		propagation="none"/>
-     </rich:menuItem>
-	<rich:menuItem>
-    	<s:link view="/DeliveryTypesList.xhtml"
-           	value="DeliveryTypes List"
-           	id="DeliveryTypesId"
-			includePageParams="false"
-     		propagation="none"/>
-     </rich:menuItem>
-	<rich:menuItem>
-    	<s:link view="/RegisteredUserList.xhtml"
-           	value="RegisteredUser List"
-           	id="RegisteredUserId"
-			includePageParams="false"
-     		propagation="none"/>
-     </rich:menuItem>
-    </rich:dropDownMenu>
+    
+    
+    
     <!-- @newMenuItem@ -->
     <rich:toolBarGroup location="right">
         <h:outputText id="menuWelcomeId" value="signed in as: #{credentials.username}" rendered="#{identity.loggedIn}"/>
-        <s:link id="menuLoginId" view="/login.xhtml" value="Login" rendered="#{not identity.loggedIn}" propagation="none"/>
-        <s:link id="menuLogoutId" view="/home.xhtml" action="#{identity.logout}" value="Logout" rendered="#{identity.loggedIn}" propagation="none"/>
+        <s:link id="menuCart" view="/cart.xhtml" value="Shopping Cart" propagation="none"/>
+        <s:link id="menuLoginId" view="/login.xhtml" value="#{messages['menu.login']}" rendered="#{not identity.loggedIn}" propagation="none"/>
+        <s:link id="menuProfile" view="/Profile.xhtml" value="#{messages['menu.profile']}" rendered="#{identity.loggedIn and s:hasRole('customer')}" propagation="none"/>
+        <s:link id="menuLogoutId" view="/home.xhtml" action="#{identity.logout}" value="#{messages['menu.logout']}" rendered="#{identity.loggedIn}" propagation="none"/>
     </rich:toolBarGroup>
 </rich:toolBar>
